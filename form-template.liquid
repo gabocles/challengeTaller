@@ -1,0 +1,116 @@
+{{ 'styles.css' | asset_url | stylesheet_tag }}
+
+{% if section.settings.heading %}
+  <h2>{{ section.settings.heading }}</h2>
+{% endif %}
+
+{% form 'contact' %}
+  {% if form.posted_successfully? %}
+    <p>your message has been sent</p>
+  {% elsif form.errors %}
+    {{ form.errors | default_errors }}
+  {% endif %}
+
+  {% for block in section.blocks %}
+    {% if block.type == 'input' %}
+      <div>
+        <label for="{{ block.settings.id }}">{{ block.settings.label }}</label>
+        <input 
+          type="{{ block.settings.type }}" 
+          name="contact[{{ block.settings.name }}]" 
+          placeholder="{{ block.settings.placeholder }}" 
+          id="{{ block.settings.id }}" 
+          value="{% if form[block.settings.name] %} {{ form[block.settings.name] }} {% endif %}" >
+      </div>
+    {% endif %}
+
+  {% endfor %}
+
+  <div>
+    <label for="first-name">First name</label>
+    <input
+      type="text"
+      name="contact[first_name]"
+      id="first-name"
+      placeholder="First name"
+      value="{{ form.first_name }}"
+    >
+  </div>
+
+  <div class="last-name">
+    <label for="last-name">Last name</label>
+    <input type="text" name="contact[last_name]" id="last-name">
+  </div>
+
+  <div class="phone">
+    <label for="phone">Phone</label>
+    <input type="tel" name="contact[phone]" id="phone">
+  </div>
+
+  <div class="email">
+    <label for="email">Email</label>
+    <input type="email" name="contact[email]" id="email" placeholder="email@email.com" value="{{ form.email }}">
+  </div>
+
+  <div class="message">
+    <label for="message">Message</label>
+    <textarea name="contact[body]" id="message" value="{{ form.message }}"></textarea>
+  </div>
+
+  <div class="submit">
+    <input type="submit" value="Contact Us!">
+  </div>
+{% endform %}
+
+{% schema %}
+{
+  "name": "Taller form",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading text"
+    }
+  ],
+  "blocks": [
+    {
+      "name": "Input",
+      "type": "input",
+      "settings": [
+         {
+           "type": "text",
+           "id": "name",
+           "label": "Name"
+         },
+         {
+           "type": "text",
+           "id": "placeholder",
+           "label": "Placeholder"
+         },
+         {
+           "type": "text",
+           "id": "label",
+           "label": "Label"
+         },
+         {
+           "type": "text",
+           "id": "type",
+           "label": "Type"
+         },
+         {
+           "type": "text",
+           "id": "id",
+           "label": "Id"
+         }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Taller form",
+      "settings": {}
+    }
+  ]
+}
+{% endschema %}
